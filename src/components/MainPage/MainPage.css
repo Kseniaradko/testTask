@@ -1,0 +1,11 @@
+.main_page {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+.speed_table {
+    display: flex;
+    align-items: center;
+}

@@ -1,0 +1,22 @@
+.table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.speed_row {
+    display: flex;
+    flex-direction: row;
+}
+
+.speed_cell {
+    border: 1px solid black;
+    min-width: 140px;
+    padding: 2px;
+}
+
+button {
+    margin: 5px;
+    padding: 5px;
+}
