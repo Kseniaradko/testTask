@@ -3,15 +3,16 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {fetchTrains} from "./ActionCreator";
 import {RootState} from "../store";
 
-
 interface TrainState {
     trains: Train[];
+    selectedTrain: Train | null;
     isLoading: boolean;
     error: string;
 }
 
 const initialState: TrainState = {
     trains: [],
+    selectedTrain: null,
     isLoading: false,
     error: ''
 }
@@ -41,6 +42,9 @@ export const trainSlice = createSlice({
         trainSpeedUpdatedFailed(state, action: PayloadAction<string>) {
             state.isLoading = false;
             state.error = action.payload;
+        },
+        selectTrain(state, action: PayloadAction<Train | null>) {
+            state.selectedTrain = action.payload
         }
     },
     extraReducers: {

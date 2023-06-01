@@ -1,21 +1,14 @@
-import './speedTable.css'
-import {ChangeEvent, FormEvent, useEffect, useState} from "react";
-import { SpeedLimit, Train } from "../../types/TrainInterface";
+import {ChangeEvent, FormEvent, useState} from "react";
+import { SpeedLimit } from "../../types/TrainInterface";
 import { SpeedRow } from "./SpeedRow";
-import { useAppDispatch } from "../../store/hooks/redux";
-import { trainSlice } from "../../store/reducers/TrainSlice";
+import {useAppDispatch, useAppSelector} from "../../store/hooks/redux";
+import {trainSlice} from "../../store/reducers/TrainSlice";
+import './speedTable.css';
 
-interface SpeedTableProps {
-    train: Train
-}
+export const SpeedTable = () => {
+    const train = useAppSelector(state => state.trainReducer.selectedTrain)
 
-export const SpeedTable = ({train}: SpeedTableProps) => {
-    const { name, speedLimits } = train
-    console.log(name)
-    console.log('speed', speedLimits)
-
-    const [formValue, setFormValue] = useState<SpeedLimit[]>([...speedLimits])
-    console.log('formValue', formValue)
+    const [formValue, setFormValue] = useState<SpeedLimit[]>(train ? [...train.speedLimits] : [])
     const dispatch = useAppDispatch()
 
     const onChangeSpeed = (event: ChangeEvent<HTMLInputElement>) => {
@@ -30,14 +23,13 @@ export const SpeedTable = ({train}: SpeedTableProps) => {
                 }
             }
             return speed
-        } )
+        })
     }
 
     const onSubmitChanges = (event: FormEvent) => {
         event.preventDefault()
         try {
             dispatch(trainSlice.actions.trainSpeedUpdated())
-            console.log(formValue)
             setFormValue(formValue.sort((a, b) => a.speedLimit > b.speedLimit ? 1 : -1))
 
             const editedTrain = {
@@ -53,15 +45,11 @@ export const SpeedTable = ({train}: SpeedTableProps) => {
         }
     }
 
-    useEffect(() => {
-        setFormValue([...speedLimits])
-    },[speedLimits])
-
     return (
         <form className='table' onSubmit={onSubmitChanges}>
-            <h2>{name}</h2>
+            <h2>{train?.name}</h2>
             <div>
-                {formValue.map((speed) => (
+                {train?.speedLimits.map((speed) => (
                     <SpeedRow key={speed.name} speed={speed} onChangeSpeed={onChangeSpeed} />
                 ))}
             </div>

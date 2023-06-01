@@ -1,26 +1,27 @@
 import {useCallback, useEffect, useState} from "react";
 import {TrainTable} from "../../components/TrainTable/TrainTable";
 import {SpeedTable} from "../../components/SpeedTable/SpeedTable";
-import './MainPage.css'
 import {Train} from "../../types/TrainInterface";
 import {fetchTrains} from "../../store/reducers/ActionCreator";
 import {BASE_URL} from "../../constants/baseURL";
 import {useAppDispatch, useAppSelector} from "../../store/hooks/redux";
+import './MainPage.css'
+import {trainSlice} from "../../store/reducers/TrainSlice";
 
 export const MainPage = () => {
     const dispatch = useAppDispatch()
     const { trains, isLoading, error } = useAppSelector(state => state.trainReducer)
-
-    const [selectedTrain, setSelectedTrain] = useState<Train | null>(null)
+    const selectedTrain = useAppSelector(state => state.trainReducer.selectedTrain)
 
     const openSpeedTable = useCallback((name: string) => {
         if (selectedTrain && selectedTrain.name === name) {
-            setSelectedTrain(null)
+            dispatch(trainSlice.actions.selectTrain(null))
             return
         }
 
-        const item = trains.filter((train) => train.name === name)
-        setSelectedTrain(item[0])
+        const item = trains.filter((train) => train.name === name)[0]
+        dispatch(trainSlice.actions.selectTrain(item))
+
     }, [selectedTrain, trains])
 
     useEffect(() => {
@@ -34,7 +35,7 @@ export const MainPage = () => {
             {trains && trains.length > 0 && <TrainTable trains={trains} openSpeedTable={openSpeedTable}/>}
             {selectedTrain && (
                 <div className='speed_table'>
-                    <SpeedTable train={selectedTrain}/>
+                    <SpeedTable />
                 </div>
             )}
         </div>
