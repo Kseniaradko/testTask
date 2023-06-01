@@ -1,5 +1,6 @@
-import {Train} from "../MainPage/MainPage";
 import './TrainTable.css'
+import {Train} from "../../types/TrainInterface";
+import {TrainRow} from "./TrainRow";
 
 interface TrainTableProps {
     trains: Train[];
@@ -13,15 +14,7 @@ export const TrainTable = ({trains, openSpeedTable}: TrainTableProps) => {
             <h1>Список поездов</h1>
             <div>
                 {trains.map((train) => (
-                    <div key={train.name} className='table_row'>
-                        <div
-                            className='table_cell'
-                            onClick={() => openSpeedTable(train.name)}
-                        >
-                            {train.name}
-                        </div>
-                        <div className='table_cell'>{train.description}</div>
-                    </div>
+                    <TrainRow key={train.name} train={train} openSpeedTable={openSpeedTable}/>
                 ))}
             </div>
         </div>

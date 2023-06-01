@@ -1,6 +1,9 @@
-import {Train} from "../MainPage/MainPage";
 import './speedTable.css'
-import {FormEvent} from "react";
+import {ChangeEvent, FormEvent, useEffect, useState} from "react";
+import { SpeedLimit, Train } from "../../types/TrainInterface";
+import { SpeedRow } from "./SpeedRow";
+import { useAppDispatch } from "../../store/hooks/redux";
+import { trainSlice } from "../../store/reducers/TrainSlice";
 
 interface SpeedTableProps {
     train: Train
@@ -8,26 +11,34 @@ interface SpeedTableProps {
 
 export const SpeedTable = ({train}: SpeedTableProps) => {
     const { name, speedLimits } = train
-    let formValue = [...speedLimits]
+    console.log(name)
+    console.log('speed', speedLimits)
 
-    const validateInput = (el: any) => {
-        return el.target.value = el.target.value.replace(/[^0-9]/g, '');
-    }
+    const [formValue, setFormValue] = useState<SpeedLimit[]>([...speedLimits])
+    console.log('formValue', formValue)
+    const dispatch = useAppDispatch()
 
-    const onChangeSpeed = (event: FormEvent<HTMLInputElement>) => {
-        const { currentTarget } = event
+    const onChangeSpeed = (event: ChangeEvent<HTMLInputElement>) => {
+        const { target } = event
+        target.value = target.value.replace(/\D/g, '')
 
         formValue.map((speed) => {
-            if (speed.name === currentTarget.name) {
-                speed.speedLimit = +currentTarget.value
+            if (speed.name === target.name) {
+                return {
+                    ...speed,
+                    speedLimit: +target.value
+                }
             }
+            return speed
         } )
     }
 
     const onSubmitChanges = (event: FormEvent) => {
         event.preventDefault()
         try {
-            formValue = formValue.sort((a, b) => a.speedLimit > b.speedLimit ? 1 : -1)
+            dispatch(trainSlice.actions.trainSpeedUpdated())
+            console.log(formValue)
+            setFormValue(formValue.sort((a, b) => a.speedLimit > b.speedLimit ? 1 : -1))
 
             const editedTrain = {
                 ...train,
@@ -35,25 +46,23 @@ export const SpeedTable = ({train}: SpeedTableProps) => {
             }
 
             console.log(editedTrain)
+            dispatch(trainSlice.actions.trainSpeedUpdatedSuccess(formValue))
         } catch (e: any) {
             console.log(e)
+            dispatch(trainSlice.actions.trainSpeedUpdatedFailed(e.message))
         }
     }
+
+    useEffect(() => {
+        setFormValue([...speedLimits])
+    },[speedLimits])
 
     return (
         <form className='table' onSubmit={onSubmitChanges}>
             <h2>{name}</h2>
             <div>
                 {formValue.map((speed) => (
-                    <div key={speed.name} className='speed_row'>
-                        <div className='speed_cell'>{speed.name}</div>
-                        <input
-                            name={speed.name}
-                            defaultValue={speed.speedLimit}
-                            onChange={onChangeSpeed}
-                            onInput={validateInput}
-                        />
-                    </div>
+                    <SpeedRow key={speed.name} speed={speed} onChangeSpeed={onChangeSpeed} />
                 ))}
             </div>
             <button
