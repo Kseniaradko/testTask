@@ -1,7 +1,6 @@
-import {SpeedLimit, Train} from "../../types/TrainInterface";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {fetchTrains} from "./ActionCreator";
-import {RootState} from "../store";
+import { SpeedLimit, Train } from "../../types/TrainInterface";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { fetchTrains } from "./ActionCreator";
 
 interface TrainState {
     trains: Train[];

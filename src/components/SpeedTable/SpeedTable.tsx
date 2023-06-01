@@ -1,8 +1,8 @@
-import {ChangeEvent, FormEvent, useState} from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { SpeedLimit } from "../../types/TrainInterface";
 import { SpeedRow } from "./SpeedRow";
-import {useAppDispatch, useAppSelector} from "../../store/hooks/redux";
-import {trainSlice} from "../../store/reducers/TrainSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/redux";
+import { trainSlice } from "../../store/reducers/TrainSlice";
 import './speedTable.css';
 
 export const SpeedTable = () => {
@@ -15,15 +15,17 @@ export const SpeedTable = () => {
         const { target } = event
         target.value = target.value.replace(/\D/g, '')
 
-        formValue.map((speed) => {
+        const updatedFormValue = formValue.map((speed) => {
             if (speed.name === target.name) {
-                return {
+                return  {
                     ...speed,
                     speedLimit: +target.value
                 }
             }
             return speed
         })
+        
+        setFormValue(updatedFormValue)
     }
 
     const onSubmitChanges = (event: FormEvent) => {
@@ -44,6 +46,10 @@ export const SpeedTable = () => {
             dispatch(trainSlice.actions.trainSpeedUpdatedFailed(e.message))
         }
     }
+
+    useEffect(() => {
+        setFormValue(train ? [...train.speedLimits] : [])
+    }, [train, train?.speedLimits])
 
     return (
         <form className='table' onSubmit={onSubmitChanges}>

@@ -1,5 +1,5 @@
-import {SpeedLimit} from "../../types/TrainInterface";
-import {ChangeEvent, useState} from "react";
+import { SpeedLimit } from "../../types/TrainInterface";
+import { ChangeEvent, useEffect, useState } from "react";
 import './speedTable.css';
 
 
@@ -16,6 +16,10 @@ export const SpeedRow = ({ speed, onChangeSpeed }: SpeedRowProps) => {
         setInputValue(+event.target.value)
         onChangeSpeed(event)
     }
+
+    useEffect(() => {
+        setInputValue(speedLimit)
+    }, [speedLimit])
 
     return (
         <div className='speed_row'>

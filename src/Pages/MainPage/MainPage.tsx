@@ -1,12 +1,11 @@
-import {useCallback, useEffect, useState} from "react";
-import {TrainTable} from "../../components/TrainTable/TrainTable";
-import {SpeedTable} from "../../components/SpeedTable/SpeedTable";
-import {Train} from "../../types/TrainInterface";
-import {fetchTrains} from "../../store/reducers/ActionCreator";
-import {BASE_URL} from "../../constants/baseURL";
-import {useAppDispatch, useAppSelector} from "../../store/hooks/redux";
+import { useCallback, useEffect } from "react";
+import { TrainTable } from "../../components/TrainTable/TrainTable";
+import { SpeedTable } from "../../components/SpeedTable/SpeedTable";
+import { fetchTrains } from "../../store/reducers/ActionCreator";
+import { BASE_URL } from "../../constants/baseURL";
+import { useAppDispatch, useAppSelector } from "../../store/hooks/redux";
+import { trainSlice } from "../../store/reducers/TrainSlice";
 import './MainPage.css'
-import {trainSlice} from "../../store/reducers/TrainSlice";
 
 export const MainPage = () => {
     const dispatch = useAppDispatch()
@@ -22,7 +21,7 @@ export const MainPage = () => {
         const item = trains.filter((train) => train.name === name)[0]
         dispatch(trainSlice.actions.selectTrain(item))
 
-    }, [selectedTrain, trains])
+    }, [dispatch, selectedTrain, trains])
 
     useEffect(() => {
         dispatch(fetchTrains(BASE_URL))

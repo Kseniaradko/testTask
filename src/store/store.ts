@@ -1,4 +1,4 @@
-import {combineReducers, configureStore} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import trainReducer from './reducers/TrainSlice';
 
 const rootReducer = combineReducers({

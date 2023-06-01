@@ -1,12 +1,12 @@
-import {Train} from "../../types/TrainInterface";
-import './TrainTable.css'
+import { Train } from "../../types/TrainInterface";
+import './TrainTable.css';
 
 interface TrainRowProps {
     train: Train
     openSpeedTable: (name: string) => void
 }
 
-export const TrainRow = ({train, openSpeedTable}: TrainRowProps) => {
+export const TrainRow = ({ train, openSpeedTable }: TrainRowProps) => {
     return (
         <div className='table_row'>
             <div
